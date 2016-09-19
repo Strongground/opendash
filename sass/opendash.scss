@@ -1,0 +1,78 @@
+@import 'bootstrap/mixins';
+
+body {
+  min-height: 2000px;
+  padding-top: 70px;
+  background-color: #e3e1de;
+}
+
+// Login
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+  .form-signin-heading {
+    margin-bottom: 10px;
+  }
+  .checkbox {
+    @extend .form-signin-heading;
+    font-weight: normal;
+  }
+  .form-control {
+    @include box-sizing(border-box);
+    position: relative;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+  }
+  .form-control:focus {
+    z-index: 2;
+  }
+  input {
+    &[type='email'] {
+      margin-bottom: -1px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    &[type='password'] {
+      margin-bottom: 10px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+  }
+}
+
+// Form validation
+.form-group {
+  label {
+    &.validation-error {
+      display: none;
+    }
+  }
+  &.has-error {
+    label {
+      &.validation-error {
+        display: block;
+      }
+    }
+  }
+}
+
+// Generic error pages
+.generic-error {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #df918e;
+  h1 {
+    font-weight: 300;
+    font-size: 70px;
+    letter-spacing: 3;
+    margin-bottom: 20px;
+  }
+  p {
+    font-weight: 300;
+    font-size: 30px;
+    letter-spacing: .5;
+    color: #a5a5a5;
+  }
+}
