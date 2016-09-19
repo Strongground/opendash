@@ -1,0 +1,41 @@
+/* line 3, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/login.scss */
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee; }
+
+/* line 9, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/login.scss */
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto; }
+  /* line 13, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/login.scss */
+  .form-signin .form-signin-heading, .form-signin .checkbox {
+    margin-bottom: 10px; }
+  /* line 16, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/login.scss */
+  .form-signin .checkbox {
+    font-weight: normal; }
+  /* line 20, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/login.scss */
+  .form-signin .form-control {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    height: auto;
+    padding: 10px;
+    font-size: 16px; }
+  /* line 27, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/login.scss */
+  .form-signin .form-control:focus {
+    z-index: 2; }
+  /* line 31, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/login.scss */
+  .form-signin input[type='email'] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0; }
+  /* line 36, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/login.scss */
+  .form-signin input[type='password'] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0; }
+
+/*# sourceMappingURL=../css/login.map */

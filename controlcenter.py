@@ -2,81 +2,141 @@
 """Supplies the control center for OpenDash."""
 #from bluepy import *
 from __future__ import print_function
-from bottle import route, run, template, get, post, request
+import yaml
+# from bluepy.btle import Scanner, DefaultDelegate
+from bottle import route, run, template, get, post, request, static_file, error
 
-# peripheral = blte.Peripheral()
-# if perhipheral:
-#     print "Created perhipheral"
+# @TODO Add cookie based login
+# @TODO Fix login/logout using the same functions, yet duplicating the routes stinks
+# @TODO Adding dummy object for bluetooth btle.scanEntry to model behaviour
+# @TODO Add way to actively scan for bluetooth devices and show the results on the dashboard
 
-# target_name = "My Phone"
-# target_address = None
-#
-# nearby_devices = bluetooth.discover_devices()
-#
-# for bdaddr in nearby_devices:
-#     if target_name == bluetooth.lookup_name( bdaddr ):
-#         target_address = bdaddr
-#         break
-#
-# if target_address is not None:
-#     print "found target bluetooth device with address ", target_address
-# else:
-#     print "could not find target bluetooth device nearby"
+#### Bluetooth mock
+class Scanner(object):
+    """Mock scanner class."""
 
-#### Login page
+    def scan(self, duration):
+        """Return mock data from a discovered bluetooth device."""
+        mock_devices = {
+            'mock_device' : {
+                'addr' : '08:df:1f:c4:a5:1e',
+                'addrType' : 'public',
+                'iface' : 0,
+                'rssi' : -58,
+                'connectable' : True,
+                'updateCount' : 1
+            }
+        }
+        return mock_devices
 
-@route('/')
-def index():
-    """Show index page."""
-    return '<h1>Index Page</h1>'
 
-@route('/<action>/<name>')
-def doAction(action, name):
-    """Do action if defined as possible action."""
-    allowed_actions = {
-        'greet',
-        'curse',
-        'woo'
-    }
-    if action in allowed_actions:
-        return template('<h2>{{name}} shall be {{action}}ed!</h2>', name=name, action=action)
+# @TODO try to get this via clever guessing from browser and allow to set via preferences in opendash itself
+# currently this is hardcoded, change this to <language name> to test UI in that language, if there is a
+# corresponding languagename.yml in the "languages" folder
+language = ""
+
+def load_language(lang):
+    """Load localized strings."""
+    if lang == "" or lang == "default":
+        file_handle = open("languages/default.yml")
     else:
-        return template('<h2>Sorry, the action "{{action}}" could not be found!</h2>', action=action)
+        language_filename = "languages/"+lang+".yml"
+        file_handle = open(language_filename)
+    set_language = yaml.safe_load(file_handle)
+    file_handle.close()
+    return set_language
 
+current_language = load_language(language)
+
+#### Generic
+@route('/js/<filename>')
+def js_static(filename):
+    """Serve static JS."""
+    return static_file(filename, root='./js')
+
+@route('/js/bootstrap/<filename>')
+def js_static_bootstrap(filename):
+    """Serve static bootstrap JS modules."""
+    return static_file(filename, root='./js/bootstrap')
+
+@route('/img/<filename>')
+def img_static(filename):
+    """Serve static image files."""
+    return static_file(filename, root='./img')
+
+@route('/css/<filename>')
+def css_static(filename):
+    """Serve static css files."""
+    return static_file(filename, root='./css')
+
+#### Login
 @get('/login')
 def show_login():
     """Show login form to the user."""
-    if not check_login_cookie:
-        return '''
-            <form action="/login" method="post">
-                Username: <input name="username" type="text" />
-                Password: <input name="password" type="password" />
-                <input value="Login" type="submit" />
-            </form>
-        '''
+    return template('login', current_language=current_language, showMenu=False)
 
 @post('/login')
 def do_login():
     """Process the login attempt of a user."""
     username = request.forms.get('username')
     password = request.forms.get('password')
-    if check_login(username, password):
-        return "<p style='color: green; font-weight: bold;'>You are successfully logged in!</p>"
+    print("Entered: " + username + " and " + password)
+    login_check_result = check_login(username, password)
+    if login_check_result['check']:
+        return template('dashboard', current_language=current_language, showMenu=True)
     else:
-        return "<p style='color: red; font-weight: bold;'>Login failed.</p>"
+        return template('login', current_language=current_language, showMenu=False, invalidateField=login_check_result['error_cause'])
 
+@get('/logout')
+def do_logout():
+    """Log the user out."""
+    return template('login', current_language=current_language, showMenu=False)
+
+#### Template Tests
+@route('/dashboard')
+def show_dashboard():
+    """Show the default dashboard."""
+    return template('dashboard', current_language=current_language, showMenu=True)
+
+@route('/testerror/<errortype>')
+def show_error(errortype):
+    """Show error page for given error type."""
+    return show_error_page(errortype)
+
+#### Error pages
+@error(404)
+def error404(error):
+    """Return 404 error page."""
+    return show_error('404')
+
+@error(500)
+def error500(error):
+    """Return 500 error page."""
+    return show_error('500')
 
 #### Generic functions
 def check_login(username, password):
     """Check if given login is correct."""
-    if username == "noel" and password == "root":
-        return True
+    result = dict()
+    print("comparing " + username + " and " + password + " against 'test'")
+    if username == "test":
+        if password == "test":
+            result['check'] = True
+        else:
+            result['check'] = False
+            result['error_cause'] = 'inputPassword'
     else:
-        return False
+        result['check'] = False
+        result['error_cause'] = 'inputEmail'
+    return result
 
 def check_login_cookie(username):
-    """Check if has valid login-cookie."""
-    pass
+    """Check if client has valid login-cookie."""
+    return False
+
+def show_error_page(error_type):
+    """Show generic error page based on error type."""
+    return template('error', error_type=error_type, current_language=current_language, showMenu=True)
 
 #### Start development server
 run(host='localhost', port=8585)
