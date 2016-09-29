@@ -1,7 +1,7 @@
 language_name: "English"
 # login
 heading_login: "Please log in"
-label_email: "Username"
+label_username: "Username"
 label_password: "Password"
 label_staysignedin: "Remember me"
 label_login: "Log in"
@@ -10,6 +10,11 @@ welcome_header: "Welcome to OpenDash!"
 welcome_paragraph1: "It looks like you signed in the first time. If you need help with a function, you
 currently will have to figure it out for yourself. The help section is to be invented yet."
 welcome_paragraph2: "Have fun automating your life either way!"
+# agents
+agents_header: "Your registered agents"
+agents_empty_header: "No agents found :("
+agents_empty_description: "...yet. Try hitting the \"Scan\" button to search for DashAgents nearby."
+agents_scan_button: "Scan"
 # errors
 generic_header: "Undefined Fail."
 generic_description: "An error occured. Sorry! We cannot determine what went wrong. Best to try and just reload this page. If the error persists, try a reboot of the system. If you feel confident about it, have a look into your logs, they may tell more."

@@ -64,4 +64,22 @@ body {
     letter-spacing: .5;
     color: #a5a5a5; }
 
+/* line 81, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+.logout a {
+  transition: background-color .5s, color .5s; }
+  /* line 83, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  .logout a:hover {
+    background-color: #f00 !important;
+    color: #fff !important; }
+
+/* line 90, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+.rotate {
+  animation: full_rotation linear 2s infinite; }
+
+@keyframes full_rotation {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
+
 /*# sourceMappingURL=../css/opendash.map */

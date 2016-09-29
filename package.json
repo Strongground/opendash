@@ -1,0 +1,12 @@
+{
+  "standard": {
+    "globals": [
+      "browser"
+    ],
+    "env": {
+      "jquery": true,
+      "browser": true,
+      "mocha": true
+    }
+  }
+}

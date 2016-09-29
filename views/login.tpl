@@ -1,7 +1,9 @@
 % showMenu = showMenu
 % include('header', showMenu=showMenu)
+
 % setdefault('invalidateField', '')
-% print(invalidateField)
+% setdefault('originalInput', '')
+
 <form class="form-signin" method="post">
   <h2 class="form-signin-heading">{{current_language['heading_login']}}</h2>
 
@@ -10,12 +12,12 @@
   % else:
   <div class="form-group">
   % end
-    <label for="inputUsername" class="sr-only">{{current_language['label_email']}}</label>
-    <input type="email" name="username" id="inputUsername" class="form-control" placeholder="{{current_language['label_email']}}" required="" autofocus="">
+    <label for="inputUsername" class="sr-only">{{current_language['label_username']}}</label>
+    <input tabindex="1" type="email" name="username" id="inputUsername" class="form-control" placeholder="{{current_language['label_username']}}" required="" autofocus="">
     <label for="inputPassword" class="sr-only">{{current_language['label_password']}}</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="{{current_language['label_password']}}" required="" >
+    <input tabindex="2" type="password" name="password" id="inputPassword" class="form-control" placeholder="{{current_language['label_password']}}" required="" >
   % if invalidateField == 'inputUsername':
-    <label for="inputUsername" class="control-label validation-error visible">{{current_language['validation_error_email']}}</label>
+    <label for="inputUsername" class="control-label validation-error">{{current_language['validation_error_email']}}</label>
   % elif invalidateField == 'inputPassword':
     <label for="inputPassword" class="control-label validation-error">{{current_language['validation_error_password']}}</label>
   % end
@@ -23,7 +25,7 @@
 
   <div class="checkbox">
     <label>
-      <input type="checkbox" value="remember-me">{{current_language['label_staysignedin']}}
+      <input tabindex="3" type="checkbox" name="remember-login" value="true">{{current_language['label_staysignedin']}}
     </label>
   </div>
 

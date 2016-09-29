@@ -2,23 +2,23 @@
 """Supplies the control center for OpenDash."""
 #from bluepy import *
 from __future__ import print_function
+from pprint import pprint
+from time import sleep
 import yaml
 # from bluepy.btle import Scanner, DefaultDelegate
-from bottle import route, run, template, get, post, request, static_file, error
+from bottle import route, run, template, get, post, request, response, static_file, error, redirect
 
-# @TODO Add cookie based login
-# @TODO Fix login/logout using the same functions, yet duplicating the routes stinks
-# @TODO Adding dummy object for bluetooth btle.scanEntry to model behaviour
 # @TODO Add way to actively scan for bluetooth devices and show the results on the dashboard
 
 #### Bluetooth mock
 class Scanner(object):
     """Mock scanner class."""
 
-    def scan(self, duration):
+    @classmethod
+    def scan(cls, duration):
         """Return mock data from a discovered bluetooth device."""
-        mock_devices = {
-            'mock_device' : {
+        mock_devices = [
+            {
                 'addr' : '08:df:1f:c4:a5:1e',
                 'addrType' : 'public',
                 'iface' : 0,
@@ -26,16 +26,61 @@ class Scanner(object):
                 'connectable' : True,
                 'updateCount' : 1
             }
-        }
-        return mock_devices
+        ]
+        if duration > 0:
+            sleep(duration)
+            return mock_devices
 
+def scanForDevices(time):
+    """Scan for bluetooth devices nearby."""
+    scanner = Scanner()
+    nearby_devices = scanner.scan(float(time))
 
-# @TODO try to get this via clever guessing from browser and allow to set via preferences in opendash itself
-# currently this is hardcoded, change this to <language name> to test UI in that language, if there is a
-# corresponding languagename.yml in the "languages" folder
-language = ""
+    return nearby_devices
 
-def load_language(lang):
+def getNearbyDevices():
+    """Handle the results of a scanForDevices() call and return some data about them."""
+    nearby_devices = scanForDevices(1)
+    return nearby_devices
+
+#### Generic functions
+def check_login(username, password):
+    """Check if given login is correct."""
+    result = dict()
+    if username == "test":
+        if password == "test":
+            result['check'] = True
+        else:
+            result['check'] = False
+            result['error_cause'] = 'inputPassword'
+    else:
+        result['check'] = False
+        result['error_cause'] = 'inputUsername'
+    return result
+
+def check_login_cookie(username):
+    """Check if client has valid login-cookie."""
+    return False
+
+def show_error_page(error_type):
+    """Show generic error page based on error type."""
+    return template('error', error_type=error_type, current_language=get_language_from_client(), showMenu=True)
+
+def has_login_cookie():
+    """Check if the user is logged in and redirects to original target."""
+    login_cookie = request.get_cookie('opendash-stayloggedin')
+    test = (login_cookie and login_cookie == 'true')
+    return bool(test)
+
+def get_language_from_client():
+    """Attempt to get the language from the client to set UI language."""
+    language_name = 'default'
+    accept_language_header = request.headers.get('HTTP_ACCEPT_LANGUAGE')
+    if accept_language_header and 'de' in accept_language_header:
+        language_name = 'german'
+    return load_language_file(language_name)
+
+def load_language_file(lang):
     """Load localized strings."""
     if lang == "" or lang == "default":
         file_handle = open("languages/default.yml")
@@ -46,9 +91,15 @@ def load_language(lang):
     file_handle.close()
     return set_language
 
-current_language = load_language(language)
+# This must currently be global and its not nice
+#current_language = get_language_from_client()
 
 #### Generic
+@route('/')
+def index():
+    """Redirect non-specific."""
+    redirect('/login')
+
 @route('/js/<filename>')
 def js_static(filename):
     """Serve static JS."""
@@ -69,35 +120,86 @@ def css_static(filename):
     """Serve static css files."""
     return static_file(filename, root='./css')
 
+@route('/fonts/bootstrap/<filename>')
+def fonts_static_bootstrap(filename):
+    """Serve icon webfonts from bootstrap."""
+    return static_file(filename, root='./fonts/bootstrap')
+
+@route('/fonts/<filename>')
+def fonts_static(filename):
+    """Serve webfonts."""
+    return static_file(filename, root='./fonts')
+
 #### Login
 @get('/login')
 def show_login():
     """Show login form to the user."""
-    return template('login', current_language=current_language, showMenu=False)
+    if has_login_cookie():
+        redirect('/dashboard')
+    else:
+        return template('login', current_language=get_language_from_client(), showMenu=False)
 
 @post('/login')
 def do_login():
     """Process the login attempt of a user."""
     username = request.forms.get('username')
     password = request.forms.get('password')
-    print("Entered: " + username + " and " + password)
+    remember = request.forms.get('remember-login')
     login_check_result = check_login(username, password)
     if login_check_result['check']:
-        return template('dashboard', current_language=current_language, showMenu=True)
+        # Success
+        if remember:
+            max_age = 60 * 60 * 24 * 30 # a month
+        max_age = 60 * 60 # an hour
+        response.set_cookie('opendash-stayloggedin', 'true', max_age=max_age)
+        redirect('/dashboard')
     else:
-        return template('login', current_language=current_language, showMenu=False, invalidateField=login_check_result['error_cause'])
+        # Error
+        return template('login', current_language=get_language_from_client(), showMenu=False, invalidateField=login_check_result['error_cause'])
 
-@get('/logout')
+@route('/logout')
 def do_logout():
-    """Log the user out."""
-    return template('login', current_language=current_language, showMenu=False)
+    """Redirect user to the login page, delete login cookies."""
+    response.set_cookie('opendash-stayloggedin', 'false')
+    redirect('/login')
 
-#### Template Tests
+#### Dashboard
 @route('/dashboard')
 def show_dashboard():
     """Show the default dashboard."""
-    return template('dashboard', current_language=current_language, showMenu=True)
+    if has_login_cookie():
+        return template('dashboard', current_language=get_language_from_client(), showMenu=True)
+    else:
+        redirect('/login')
 
+@route('/dashboard/get_agents')
+def get_agents():
+    """Return the view for found agents."""
+    found_devices = getNearbyDevices()
+    number_devices_found = len(found_devices)
+
+    ### Define elements
+    agent_list = ""
+    agent_element = "<li>"
+    agent_element_end = "</li>"
+    ### Wrap agents in unordered list element
+    if number_devices_found > 0:
+        for device in found_devices:
+            agent_list += agent_element
+            for attribute in device:
+                agent_list += "<p>"+str(attribute)+": "+str(device[attribute])+"</p>"
+            agent_list += agent_element_end
+    return agent_list
+
+    # addrType
+    # iface
+    # connectable
+    # updateCount
+    # rssi
+    # addr
+    # agent_list = agent_element_list + agent_element + "<p>Sample content</p>" + agent_element_end + agent_element_list_end
+
+#### Template Tests
 @route('/testerror/<errortype>')
 def show_error(errortype):
     """Show error page for given error type."""
@@ -114,29 +216,10 @@ def error500(error):
     """Return 500 error page."""
     return show_error('500')
 
-#### Generic functions
-def check_login(username, password):
-    """Check if given login is correct."""
-    result = dict()
-    print("comparing " + username + " and " + password + " against 'test'")
-    if username == "test":
-        if password == "test":
-            result['check'] = True
-        else:
-            result['check'] = False
-            result['error_cause'] = 'inputPassword'
-    else:
-        result['check'] = False
-        result['error_cause'] = 'inputEmail'
-    return result
-
-def check_login_cookie(username):
-    """Check if client has valid login-cookie."""
-    return False
-
-def show_error_page(error_type):
-    """Show generic error page based on error type."""
-    return template('error', error_type=error_type, current_language=current_language, showMenu=True)
-
 #### Start development server
 run(host='localhost', port=8585)
+
+#### Start test production server
+# run(host='0.0.0.0', port=80)
+
+#pprint(getNearbyDevices()[0])

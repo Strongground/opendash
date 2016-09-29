@@ -1,7 +1,7 @@
 language_name: "Deutsch"
 # login
 heading_login: "Bitte melde dich an"
-label_email: "E-Mail Adresse"
+label_username: "E-Mail Adresse"
 label_password: "Passwort"
 label_staysignedin: "Eingeloggt bleiben"
 label_login: "Login"
@@ -9,6 +9,9 @@ label_login: "Login"
 welcome_header: "Willkommen bei OpenDash!"
 welcome_paragraph1: "Sieht so aus als wenn du dich das erste Mal eingeloggt hast. Wenn du Hilfe bei einer Funktion brauchst, musst du momentan noch alleine rausfinden wie es funktioniert. Der Hilfe-Bereich muss noch erfunden werden. :/"
 welcome_paragraph2: "Trotzdem viel Spaß dabei, dein Leben zu automatisieren!"
+# agents
+agents_empty_header: "Keine Agenten gefunden :("
+agents_empty_description: "...bis jetzt. Versuch' mal den 'Scan' button zu drücken, um nach DashAgenten in der Nähe zu suchen."
 # errors
 generic_header: ""
 generic_description: "Es ist ein Fehler aufgetreten. Entschuldigung! Wir können momentan nicht sagen was schief gegangen ist. Versuch am besten einfach die Seite neu zu laden. Wenn der Fehler weiterhin auftritt, versuche es mit einem Neustart. Falls du dich sicher fühlst, kannst du auch in die Logs schauen, vielleicht steht da mehr."

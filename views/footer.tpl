@@ -6,6 +6,7 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <!-- But really should be async loaded -->
 <script src="/js/jquery-3.1.0.min.js"></script>
+<script src="/js/opendash.js"></script>
 <script src="/js/bootstrap/affix.js"></script>
 <script src="/js/bootstrap/alert.js"></script>
 <script src="/js/bootstrap/bootstrap-transition.js"></script>
