@@ -1,6 +1,5 @@
 #!/usr/bin/python
 """Supplies the control center for OpenDash."""
-#from bluepy import *
 from __future__ import print_function
 from pprint import pprint
 from time import sleep
@@ -8,9 +7,16 @@ import yaml
 # from bluepy.btle import Scanner, DefaultDelegate
 from bottle import route, run, template, get, post, request, response, static_file, error, redirect
 
-# @TODO Add way to actively scan for bluetooth devices and show the results on the dashboard
+# @TODO Implement workflow: "First search for bluetooth devices. Then choose which are DashAgents based on device name - automatically pair."
+# @TODO Add a additional naming layer in the UI so a DashAgent's MAC address can be bound to a -preferebly unique- name given by the user
+# @TODO Add Moccha & Webdriver to the project and configure them
+# @TODO Write some high-level wrappers for Moccha & Webdriver to do things like "Find element with <ID> on page <X> and do <ACTION>" inside controlcenter.py
+# @TODO Add some kind of plugin system so you can add a "Amazon" plugin which defines some common URLs and then only add credentials as a user
+# @TODO Add some kind of action management where an action can be bound to a DashAgent (effectively it's MAC address)
+
 
 #### Bluetooth mock
+# @TODO replace this with actual bluepy-based code - e.g.
 class Scanner(object):
     """Mock scanner class."""
 
@@ -90,9 +96,6 @@ def load_language_file(lang):
     set_language = yaml.safe_load(file_handle)
     file_handle.close()
     return set_language
-
-# This must currently be global and its not nice
-#current_language = get_language_from_client()
 
 #### Generic
 @route('/')
@@ -190,14 +193,6 @@ def get_agents():
                 agent_list += "<p>"+str(attribute)+": "+str(device[attribute])+"</p>"
             agent_list += agent_element_end
     return agent_list
-
-    # addrType
-    # iface
-    # connectable
-    # updateCount
-    # rssi
-    # addr
-    # agent_list = agent_element_list + agent_element + "<p>Sample content</p>" + agent_element_end + agent_element_list_end
 
 #### Template Tests
 @route('/testerror/<errortype>')

@@ -1,19 +1,17 @@
 (function ($) {
   $.fn.toggleAttr = function (attribute, value) {
-    if (attribute && value) {
-      console.log('attribute and value was given')
-      if ($(this).attr(attribute)) {
-        console.log('element already has \''+attribute+'\', removing it.')
-        $(this).removeAttr(attribute)
-      } else {
-        console.log('element does not have \''+attribute+'\'.')
-        if (value) {
+    value = value || ''
+    if (attribute.length > 0) {
+      if (($(this).attr(attribute) != undefined) && ($(this).attr(attribute) != value)) {
+          window.alert('element already has \''+attribute+'\', removing it.')
+          $(this).removeAttr(attribute)
+      } else if ($(this).attr(attribute) == value) {
+          window.alert('element already has \''+attribute+'\' with value \''+value+'\', toggling value instead.')
+          value = ''
           $(this).attr(attribute, value)
-          console.log('additional value given, adding attribute with value.')
-        } else {
-          $(this).attr(attribute)
-          console.log('adding attribute.')
-        }
+      } else {
+        window.alert('element does not yet have \''+attribute+'\'. creating it.')
+        $(this).attr(attribute, value)
       }
     }
   }
