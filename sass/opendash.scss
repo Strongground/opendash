@@ -1,9 +1,10 @@
 @import 'bootstrap/mixins';
+@import 'colors';
 
 body {
   min-height: 2000px;
   padding-top: 70px;
-  background-color: #e3e1de;
+  background-color: $background;
 }
 
 // Login
@@ -62,7 +63,7 @@ body {
 .generic-error {
   text-align: center;
   padding: 20px;
-  border: 1px solid #df918e;
+  border: 1px solid $error-border;
   h1 {
     font-weight: 300;
     font-size: 70px;
@@ -73,22 +74,27 @@ body {
     font-weight: 300;
     font-size: 30px;
     letter-spacing: .5;
-    color: #a5a5a5;
-  }
-}
-
-// Header
-.logout a {
-  transition: background-color .5s, color .5s;
-  &:hover {
-    background-color: #f00 !important;
-    color: #fff !important;
+    color: $error-font;
   }
 }
 
 // Dashboard
 .rotate {
   animation: full_rotation linear 2s infinite;
+}
+.agent-container {
+  ul {
+    li {
+      border-radius: 5px;
+      border: 1px solid $dashagent-border;
+      padding: 20px;
+      p {
+        &:last-child {
+          margin: 0;
+        }
+      }
+    }
+  }
 }
 
 // Animations

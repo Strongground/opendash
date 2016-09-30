@@ -13,7 +13,7 @@
 
     <div class="row">
       <div class="agent-container col-md-10">
-        <ul>
+        <ul class="list-unstyled">
           <h3>{{current_language['agents_empty_header']}}</h3>
           <p>{{current_language['agents_empty_description']}}</p>
         </ul>

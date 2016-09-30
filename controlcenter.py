@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Supplies the control center for OpenDash."""
 from __future__ import print_function
-from pprint import pprint
+#from pprint import pprint
 from time import sleep
 import yaml
 # from bluepy.btle import Scanner, DefaultDelegate
@@ -11,7 +11,7 @@ from bottle import route, run, template, get, post, request, response, static_fi
 # @TODO Add a additional naming layer in the UI so a DashAgent's MAC address can be bound to a -preferebly unique- name given by the user
 # @TODO Add Moccha & Webdriver to the project and configure them
 # @TODO Write some high-level wrappers for Moccha & Webdriver to do things like "Find element with <ID> on page <X> and do <ACTION>" inside controlcenter.py
-# @TODO Add some kind of plugin system so you can add a "Amazon" plugin which defines some common URLs and then only add credentials as a user
+# @TODO Add some kind of plugin system so you can add a "Amazon" plugin which defines some common URLs and then the user only has to add credentials and define which DashAgent should buy what product on Amazon
 # @TODO Add some kind of action management where an action can be bound to a DashAgent (effectively it's MAC address)
 
 

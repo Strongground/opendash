@@ -1,21 +1,21 @@
-/* line 3, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+/* line 4, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
 body {
   min-height: 2000px;
   padding-top: 70px;
   background-color: #e3e1de; }
 
-/* line 10, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+/* line 11, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
 .form-signin {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto; }
-  /* line 14, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  /* line 15, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
   .form-signin .form-signin-heading, .form-signin .checkbox {
     margin-bottom: 10px; }
-  /* line 17, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  /* line 18, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
   .form-signin .checkbox {
     font-weight: normal; }
-  /* line 21, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  /* line 22, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
   .form-signin .form-control {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -24,57 +24,58 @@ body {
     height: auto;
     padding: 10px;
     font-size: 16px; }
-  /* line 28, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  /* line 29, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
   .form-signin .form-control:focus {
     z-index: 2; }
-  /* line 32, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  /* line 33, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
   .form-signin input[type='email'] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0; }
-  /* line 37, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  /* line 38, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
   .form-signin input[type='password'] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0; }
 
-/* line 48, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+/* line 49, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
 .form-group label.validation-error {
   display: none; }
 
-/* line 54, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+/* line 55, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
 .form-group.has-error label.validation-error {
   display: block; }
 
-/* line 62, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+/* line 63, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
 .generic-error {
   text-align: center;
   padding: 20px;
-  border: 1px solid #df918e; }
-  /* line 66, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  border: 1px solid white; }
+  /* line 67, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
   .generic-error h1 {
     font-weight: 300;
     font-size: 70px;
     letter-spacing: 3;
     margin-bottom: 20px; }
-  /* line 72, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  /* line 73, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
   .generic-error p {
     font-weight: 300;
     font-size: 30px;
     letter-spacing: .5;
-    color: #a5a5a5; }
+    color: #df918e; }
 
-/* line 81, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
-.logout a {
-  transition: background-color .5s, color .5s; }
-  /* line 83, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
-  .logout a:hover {
-    background-color: #f00 !important;
-    color: #fff !important; }
-
-/* line 90, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+/* line 82, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
 .rotate {
   animation: full_rotation linear 2s infinite; }
+
+/* line 87, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+.agent-container ul li {
+  border-radius: 5px;
+  border: 1px solid gray;
+  padding: 20px; }
+  /* line 92, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  .agent-container ul li p:last-child {
+    margin: 0; }
 
 @keyframes full_rotation {
   0% {
