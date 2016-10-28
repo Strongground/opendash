@@ -31,7 +31,7 @@
 
   jQuery(agent_panel).find(scan_button).on('click', function () {
     toggleAnimateScanButton()
-    jQuery(agent_list).load('/dashboard/get_agents', function () {
+    jQuery(agent_list).load('/dashboard/get_mock_agents', function () {
       toggleAnimateScanButton()
     })
   })

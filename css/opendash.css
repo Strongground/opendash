@@ -71,9 +71,10 @@ body {
 /* line 87, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
 .agent-container ul li {
   border-radius: 5px;
-  border: 1px solid gray;
-  padding: 20px; }
-  /* line 92, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  border: 1px solid #d9d9d9;
+  padding: 20px;
+  margin-bottom: 10px; }
+  /* line 93, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
   .agent-container ul li p:last-child {
     margin: 0; }
 

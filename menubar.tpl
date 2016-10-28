@@ -13,14 +13,14 @@
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Dashboard</a></li>
-        <li><a href="./Preferences">Preferences</a></li>
-        <li><a href="./contact">Support</a></li>
+        <li class="active"><a href="./dashboard">Dashboard</a></li>
+        <li><a href="./preferences">Preferences</a></li>
+        <li><a href="./support">Support</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="active logout"><a href="./logout">Log out</a></li>
       </ul>
     </div>
-    
+
   </div>
 </nav>

@@ -5,7 +5,7 @@
 		"../sass/colors.scss"
 	],
 	"sourcesContent": [
-		"// basic colors\n$warm-grey: #e3e1de;\n$dark-red: #df918e;\n$black: #000;\n$white: #fff;\n\n// contextual definitions\n$background: $warm-grey;\n\n$error-border: lighten($dark-red, 30%);\n$error-font: $dark-red;\n\n$dashagent-border: lighten($black, 50%);\n"
+		"// basic colors\n$warm-grey: #e3e1de;\n$dark-red: #df918e;\n$black: #000;\n$white: #fff;\n\n// contextual definitions\n$background: $warm-grey;\n\n$error-border: lighten($dark-red, 30%);\n$error-font: $dark-red;\n\n$dashagent-border: lighten($black, 85%);\n"
 	],
 	"mappings": "",
 	"names": []

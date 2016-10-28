@@ -2,52 +2,19 @@
 """Supplies the control center for OpenDash."""
 from __future__ import print_function
 #from pprint import pprint
-from time import sleep
 import yaml
 # from bluepy.btle import Scanner, DefaultDelegate
 from bottle import route, run, template, get, post, request, response, static_file, error, redirect
+import bluetooth
+import agent_shelf
 
 # @TODO Implement workflow: "First search for bluetooth devices. Then choose which are DashAgents based on device name - automatically pair."
 # @TODO Add a additional naming layer in the UI so a DashAgent's MAC address can be bound to a -preferebly unique- name given by the user
-# @TODO Add Moccha & Webdriver to the project and configure them
-# @TODO Write some high-level wrappers for Moccha & Webdriver to do things like "Find element with <ID> on page <X> and do <ACTION>" inside controlcenter.py
+# @TODO Add some kind of no-SQL file based database to the project to store agents, configurations etc.
+# @TODO Write some high-level wrappers for Selenium to do things like "Find element with <ID> on page <X> and do <ACTION>" inside controlcenter.py
 # @TODO Add some kind of plugin system so you can add a "Amazon" plugin which defines some common URLs and then the user only has to add credentials and define which DashAgent should buy what product on Amazon
 # @TODO Add some kind of action management where an action can be bound to a DashAgent (effectively it's MAC address)
-
-
-#### Bluetooth mock
-# @TODO replace this with actual bluepy-based code - e.g.
-class Scanner(object):
-    """Mock scanner class."""
-
-    @classmethod
-    def scan(cls, duration):
-        """Return mock data from a discovered bluetooth device."""
-        mock_devices = [
-            {
-                'addr' : '08:df:1f:c4:a5:1e',
-                'addrType' : 'public',
-                'iface' : 0,
-                'rssi' : -58,
-                'connectable' : True,
-                'updateCount' : 1
-            }
-        ]
-        if duration > 0:
-            sleep(duration)
-            return mock_devices
-
-def scanForDevices(time):
-    """Scan for bluetooth devices nearby."""
-    scanner = Scanner()
-    nearby_devices = scanner.scan(float(time))
-
-    return nearby_devices
-
-def getNearbyDevices():
-    """Handle the results of a scanForDevices() call and return some data about them."""
-    nearby_devices = scanForDevices(1)
-    return nearby_devices
+# @TODO Encapsulate the whole Bluetooth logic into module.
 
 #### Generic functions
 def check_login(username, password):
@@ -175,23 +142,23 @@ def show_dashboard():
     else:
         redirect('/login')
 
-@route('/dashboard/get_agents')
-def get_agents():
-    """Return the view for found agents."""
-    found_devices = getNearbyDevices()
+@route('/dashboard/get_mock_agents')
+def get_mock_agents():
+    """Return all paired agents from shelve and return HTML containing them."""
+    bluetooth.connect_mock_nearby_agents(time=4, amount=5, dash_agents=0)
+    found_devices = agent_shelf.get_agents()
     number_devices_found = len(found_devices)
-
-    ### Define elements
     agent_list = ""
     agent_element = "<li>"
     agent_element_end = "</li>"
-    ### Wrap agents in unordered list element
+
     if number_devices_found > 0:
         for device in found_devices:
             agent_list += agent_element
             for attribute in device:
                 agent_list += "<p>"+str(attribute)+": "+str(device[attribute])+"</p>"
             agent_list += agent_element_end
+
     return agent_list
 
 #### Template Tests
