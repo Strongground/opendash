@@ -108,20 +108,20 @@ def connect_mock_nearby_agents(time, amount, dash_agents=0):
     nearby_devices = scanner.scan(float(time), int(amount), int(dash_agents))
     paired_devices = 0
     for device in nearby_devices:
-        print(' ')
-        print('checking device:')
-        pprint(device)
+        # print(' ')
+        # print('checking device:')
+        # pprint(device)
         if is_dash_agent(device):
-            print('device is a DashAgent! Attempt to pair with it...')
+            # print('device is a DashAgent! Attempt to pair with it...')
             paired_devices += bool(pair_with_mock_agents(device))
     return paired_devices
 
 def pair_with_mock_agents(device):
     """Behave as if pairing with a found dash agent. Write the device information into shelve."""
     #someobscurepairingcode(device)
-    print('Pairing simulated')
+    # print('Pairing simulated')
     shelf_manager.store_agent(device)
-    print('DashAgent written to shelve')
+    # print('DashAgent written to shelve')
     return True
 
 # def getNearbyDevices(time):
@@ -136,5 +136,5 @@ def is_dash_agent(device):
 
 ## Get nearby devices, one of them a DashAgent, and pair with it
 # shelf_manager.show_entry('53:0b:5c:71:9e:82')
-connect_mock_nearby_agents(time=0, amount=5, dash_agents=1)
-shelf_manager.show_content()
+# connect_mock_nearby_agents(time=0, amount=5, dash_agents=1)
+# shelf_manager.show_content()

@@ -19,7 +19,7 @@
     }
   }
 
-  var agent_list = '.agent-container ul'
+  var agent_list = '.agent-container'
   var agent_panel = '#dashboard-agents'
   var scan_button = 'button.scan-button'
 

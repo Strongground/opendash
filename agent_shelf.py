@@ -26,7 +26,7 @@ class AgentShelfManager(object):
     def close_db(cls):
         """Close the currently open shelve database."""
         try:
-            self.database.close()
+            cls.database.close()
             return True
         except Exception as e:
             print('Error closing shelf: '+str(e))
@@ -59,6 +59,14 @@ class AgentShelfManager(object):
         for address, attributes in self.database.items():
             if attributes.get('uuid', -1) == agent_id:
                 return self.database[address]
+
+    def get_agents(self):
+        """Retrieve all agents from shelf."""
+        try:
+            return dict(self.database)
+        except Exception as e:
+            print('Error getting database content: '+str(e))
+            raise
 
     def show_content(self):
         """Use for debugging purposes, shows the whole content of the database in legible manner."""

@@ -1,12 +1,11 @@
 #!/usr/bin/python
 """Supplies the control center for OpenDash."""
 from __future__ import print_function
-#from pprint import pprint
+from pprint import pprint
 import yaml
 # from bluepy.btle import Scanner, DefaultDelegate
 from bottle import route, run, template, get, post, request, response, static_file, error, redirect
 import bluetooth
-import agent_shelf
 
 # @TODO Implement workflow: "First search for bluetooth devices. Then choose which are DashAgents based on device name - automatically pair."
 # @TODO Add a additional naming layer in the UI so a DashAgent's MAC address can be bound to a -preferebly unique- name given by the user
@@ -16,7 +15,7 @@ import agent_shelf
 # @TODO Add some kind of action management where an action can be bound to a DashAgent (effectively it's MAC address)
 # @TODO Encapsulate the whole Bluetooth logic into module.
 
-#### Generic functions
+#### Generic functions and helpers
 def check_login(username, password):
     """Check if given login is correct."""
     result = dict()
@@ -60,11 +59,11 @@ def load_language_file(lang):
     else:
         language_filename = "languages/"+lang+".yml"
         file_handle = open(language_filename)
-    set_language = yaml.safe_load(file_handle)
+    language_file = yaml.safe_load(file_handle)
     file_handle.close()
-    return set_language
+    return language_file
 
-#### Generic
+#### Routes
 @route('/')
 def index():
     """Redirect non-specific."""
@@ -146,20 +145,20 @@ def show_dashboard():
 def get_mock_agents():
     """Return all paired agents from shelve and return HTML containing them."""
     bluetooth.connect_mock_nearby_agents(time=4, amount=5, dash_agents=0)
-    found_devices = agent_shelf.get_agents()
-    number_devices_found = len(found_devices)
-    agent_list = ""
-    agent_element = "<li>"
-    agent_element_end = "</li>"
+    list_of_agents = bluetooth.shelf_manager.get_agents()
+    number_of_agents = len(list_of_agents)
+    agent_list_html = ''
+    iterator = 0
 
-    if number_devices_found > 0:
-        for device in found_devices:
-            agent_list += agent_element
-            for attribute in device:
-                agent_list += "<p>"+str(attribute)+": "+str(device[attribute])+"</p>"
-            agent_list += agent_element_end
-
-    return agent_list
+    if number_of_agents > 0:
+        for agent in list_of_agents:
+            iterator += 1
+            if list_of_agents[agent]['uuid'] == iterator:
+                agent_list_html += '<div class="agent">'
+                agent_list_html += '<p>' + list_of_agents[agent]['custom_name'] + '</p>'
+                agent_list_html += '<p>' + get_language_from_client()['agent_address'] + ': ' + list_of_agents[agent]['addr'] + '</p>'
+                agent_list_html += '</div>'
+    return agent_list_html
 
 #### Template Tests
 @route('/testerror/<errortype>')

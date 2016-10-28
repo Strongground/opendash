@@ -13,10 +13,8 @@
 
     <div class="row">
       <div class="agent-container col-md-10">
-        <ul class="list-unstyled">
-          <h3>{{current_language['agents_empty_header']}}</h3>
-          <p>{{current_language['agents_empty_description']}}</p>
-        </ul>
+        <h3>{{current_language['agents_empty_header']}}</h3>
+        <p>{{current_language['agents_empty_description']}}</p>
       </div>
       <div class="col-md-2">
         <button class="btn btn-primary btn-lg pull-right scan-button" type="button" name="scan_for_devices">

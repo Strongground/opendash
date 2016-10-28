@@ -15,6 +15,7 @@ agents_header: "Your registered agents"
 agents_empty_header: "No agents found :("
 agents_empty_description: "...yet. Try hitting the \"Scan\" button to search for DashAgents nearby."
 agents_scan_button: "Scan"
+agent_address: "Address:"
 # errors
 generic_header: "Undefined Fail."
 generic_description: "An error occured. Sorry! We cannot determine what went wrong. Best to try and just reload this page. If the error persists, try a reboot of the system. If you feel confident about it, have a look into your logs, they may tell more."
