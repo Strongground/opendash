@@ -141,23 +141,42 @@ def show_dashboard():
     else:
         redirect('/login')
 
+@route('/dashboard/get_actions_from/<agent_id>')
+def get_actions_from_agent(agent_id):
+    """Return all actions associated with the agent, whose ID is given."""
+    actions = bluetooth.shelf_manager.get_agents()[str(agent_id)]['actions']
+    return pprint(actions)
+
+@route('/dashboard/change_name_of/<agent_id>/to/<name>')
+def change_name_of_agent(agent_id, name):
+    """Change the name of one the agent, whose ID is given."""
+    current_name = bluetooth.shelf_manager.get_agent(agent_id)['custom_name']
+    new_name = str(name)
+    if str(new_name) != current_name:
+        bluetooth.shelf_manager.change_name(agent_id, new_name)
+    redirect('/dashboard')
+
 @route('/dashboard/get_mock_agents')
 def get_mock_agents():
     """Return all paired agents from shelve and return HTML containing them."""
-    bluetooth.connect_mock_nearby_agents(time=4, amount=5, dash_agents=0)
+    #bluetooth.connect_mock_nearby_agents(time=4, amount=5, dash_agents=0)
     list_of_agents = bluetooth.shelf_manager.get_agents()
     number_of_agents = len(list_of_agents)
     agent_list_html = ''
     iterator = 0
 
     if number_of_agents > 0:
-        for agent in list_of_agents:
+        agent_list_html += '<div class="agents">'
+        for dummy in list_of_agents:
             iterator += 1
-            if list_of_agents[agent]['uuid'] == iterator:
-                agent_list_html += '<div class="agent">'
-                agent_list_html += '<p>' + list_of_agents[agent]['custom_name'] + '</p>'
-                agent_list_html += '<p>' + get_language_from_client()['agent_address'] + ': ' + list_of_agents[agent]['addr'] + '</p>'
-                agent_list_html += '</div>'
+            agent_name = list_of_agents[str(iterator)]['custom_name']
+            agent_list_html += '<div class="agent">'
+            agent_list_html += '<h4>' + agent_name + '</h4>'
+            agent_list_html += '<p>' + get_language_from_client()['agent_address'] + ': ' + list_of_agents[str(iterator)]['addr'] + '</p>'
+            agent_list_html += '<button id="edit_actions" data-toggle="modal" data-target="#agent_edit_actions" class="btn btn-default" type="button" name="'+get_language_from_client()['agent_edit_actions']+'"><span class="glyphicon glyphicon-pencil"></span> '+get_language_from_client()['agent_edit_actions']+'</button>'
+            agent_list_html += '<button id="change_name" data-toggle="modal" data-current_name="'+agent_name+'" data-agent-id="'+str(iterator)+'" data-target="#agent_edit_name" class="btn btn-default" type="button" name="'+get_language_from_client()['agent_edit_name']+'"><span class="glyphicon glyphicon-erase"></span> '+get_language_from_client()['agent_edit_name']+'</button>'
+            agent_list_html += '</div>'
+        agent_list_html += '</div>'
     return agent_list_html
 
 #### Template Tests
@@ -182,5 +201,3 @@ run(host='localhost', port=8585)
 
 #### Start test production server
 # run(host='0.0.0.0', port=80)
-
-#pprint(getNearbyDevices()[0])

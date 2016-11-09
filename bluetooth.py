@@ -61,10 +61,11 @@ class MockScanner(object):
         """
         results = range(0, number_of_results)
         hits = range(0, number_of_dash_agents)
+
         for i in results:
             results[i] = create_random_bluetooth_device()
         for _ in hits:
-            results[randint(0, number_of_dash_agents)] = create_random_bluetooth_device(create_dash_agent=True)
+            results[randint(0, number_of_dash_agents-1)] = create_random_bluetooth_device(create_dash_agent=True)
         if duration > 0:
             sleep(duration)
         return results
@@ -133,8 +134,3 @@ def pair_with_mock_agents(device):
 def is_dash_agent(device):
     """Check if the device has a certain common name."""
     return bool(device['commonName'] == "DashAgent")
-
-## Get nearby devices, one of them a DashAgent, and pair with it
-# shelf_manager.show_entry('53:0b:5c:71:9e:82')
-# connect_mock_nearby_agents(time=0, amount=5, dash_agents=1)
-# shelf_manager.show_content()

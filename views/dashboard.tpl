@@ -1,4 +1,6 @@
 % include('header', showMenu=showMenu)
+% include('modals')
+
 <div class="jumbotron">
   <h1>{{current_language['welcome_header']}}</h1>
   <p class="lead">{{current_language['welcome_paragraph1']}}</p>
@@ -13,8 +15,14 @@
 
     <div class="row">
       <div class="agent-container col-md-10">
-        <h3>{{current_language['agents_empty_header']}}</h3>
-        <p>{{current_language['agents_empty_description']}}</p>
+        <div class="empty-message hidden">
+          <h3>{{current_language['agents_empty_header']}}</h3>
+          <p>{{current_language['agents_empty_description']}}</p>
+        </div>
+        <div class="loading-message">
+          <h3><span class="glyphicon glyphicon-refresh rotate"></span>
+          {{current_language['agents_loading_description']}}</h3>
+        </div>
       </div>
       <div class="col-md-2">
         <button class="btn btn-primary btn-lg pull-right scan-button" type="button" name="scan_for_devices">

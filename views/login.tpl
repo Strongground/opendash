@@ -1,4 +1,4 @@
-% showMenu = showMenu
+% #showMenu = showMenu
 % include('header', showMenu=showMenu)
 
 % setdefault('invalidateField', '')

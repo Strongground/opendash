@@ -68,15 +68,20 @@ body {
 .rotate {
   animation: full_rotation linear 2s infinite; }
 
-/* line 87, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
-.agent-container ul li {
+/* line 86, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+.agent-container .agent {
   border-radius: 5px;
   border: 1px solid #d9d9d9;
   padding: 20px;
   margin-bottom: 10px; }
-  /* line 93, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
-  .agent-container ul li p:last-child {
+  /* line 92, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+  .agent-container .agent p:last-child {
     margin: 0; }
+
+/* line 97, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+.agent-container .loading-message {
+  color: #aeaeae;
+  text-align: center; }
 
 @keyframes full_rotation {
   0% {
