@@ -97,6 +97,15 @@ class AgentShelfManager(object):
         except Exception as e:
             print('Error adding action '+str(action_id)+' to agent_shelf entry '+str(agent_id)+': '+str(e))
 
+    def add_mock_action(self, agent_id, action_string):
+        """Use for debugging purposes; Add a string to given agents actions array."""
+        try:
+            index = str(len(self.database[str(agent_id)]['actions']))
+            self.database[str(agent_id)]['actions'][index] = str(action_string)
+            self.database.sync()
+        except Exception as e:
+            print('Error adding action '+str(action_string)+' to agent_shelf entry '+str(agent_id)+': '+str(e))
+
     def change_name(self, agent_id, name):
         """Change the name of a given agent based on UUID."""
         try:

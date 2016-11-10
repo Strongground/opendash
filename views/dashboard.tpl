@@ -23,12 +23,15 @@
           <h3><span class="glyphicon glyphicon-refresh rotate"></span>
           {{current_language['agents_loading_description']}}</h3>
         </div>
+        <div class="agents">
+
+        </div>
       </div>
       <div class="col-md-2">
-        <button class="btn btn-primary btn-lg pull-right scan-button" type="button" name="scan_for_devices">
+        <!-- <button class="btn btn-primary btn-lg pull-right scan-button" type="button" name="scan_for_devices">
           <span class="glyphicon glyphicon-refresh"></span>
           {{current_language['agents_scan_button']}}
-        </button>
+        </button> -->
       </div>
     </div>
 

@@ -145,7 +145,28 @@ def show_dashboard():
 def get_actions_from_agent(agent_id):
     """Return all actions associated with the agent, whose ID is given."""
     actions = bluetooth.shelf_manager.get_agents()[str(agent_id)]['actions']
-    return pprint(actions)
+    action_list_html = '<thead><tr>'
+    action_list_html += '<th>' + get_language_from_client()['modal_edit_actions_table_head_number'] + '</th>'
+    action_list_html += '<th>' + get_language_from_client()['modal_edit_actions_table_head_action'] + '</th>'
+    action_list_html += '</thead></tr>'
+    action_list_html += '<tbody>'
+
+    number_of_actions = len(actions)
+    if number_of_actions > 0:
+        for action in actions:
+            action_list_html += '<tr>'
+            action_list_html += '<td>' + str(action) + '</td>'
+            action_list_html += '<td>' + bluetooth.shelf_manager.get_agents()[str(agent_id)]['actions'][action] + '</td>'
+            action_list_html += '</tr>'
+
+    action_list_html += '</tbody>'
+    return action_list_html
+
+@route('/dashboard/add_mock_action/<action_string>/to/<agent_id>')
+def add_action_to_agent(agent_id, action_string):
+    """Add a single string to the action array of the agent, whose ID is given."""
+    bluetooth.shelf_manager.add_action(agent_id, action_string)
+    redirect('/dashboard')
 
 @route('/dashboard/change_name_of/<agent_id>/to/<name>')
 def change_name_of_agent(agent_id, name):
@@ -159,24 +180,19 @@ def change_name_of_agent(agent_id, name):
 @route('/dashboard/get_mock_agents')
 def get_mock_agents():
     """Return all paired agents from shelve and return HTML containing them."""
-    #bluetooth.connect_mock_nearby_agents(time=4, amount=5, dash_agents=0)
     list_of_agents = bluetooth.shelf_manager.get_agents()
     number_of_agents = len(list_of_agents)
     agent_list_html = ''
-    iterator = 0
 
     if number_of_agents > 0:
-        agent_list_html += '<div class="agents">'
-        for dummy in list_of_agents:
-            iterator += 1
-            agent_name = list_of_agents[str(iterator)]['custom_name']
+        for agent in list_of_agents:
+            agent_name = list_of_agents[agent]['custom_name']
             agent_list_html += '<div class="agent">'
             agent_list_html += '<h4>' + agent_name + '</h4>'
-            agent_list_html += '<p>' + get_language_from_client()['agent_address'] + ': ' + list_of_agents[str(iterator)]['addr'] + '</p>'
-            agent_list_html += '<button id="edit_actions" data-toggle="modal" data-target="#agent_edit_actions" class="btn btn-default" type="button" name="'+get_language_from_client()['agent_edit_actions']+'"><span class="glyphicon glyphicon-pencil"></span> '+get_language_from_client()['agent_edit_actions']+'</button>'
-            agent_list_html += '<button id="change_name" data-toggle="modal" data-current_name="'+agent_name+'" data-agent-id="'+str(iterator)+'" data-target="#agent_edit_name" class="btn btn-default" type="button" name="'+get_language_from_client()['agent_edit_name']+'"><span class="glyphicon glyphicon-erase"></span> '+get_language_from_client()['agent_edit_name']+'</button>'
+            agent_list_html += '<p>' + get_language_from_client()['agent_address'] + ': ' + list_of_agents[agent]['addr'] + '</p>'
+            agent_list_html += '<button id="edit_actions" data-toggle="modal" data-target="#agent_edit_actions" data-agent-id="'+agent+'" class="btn btn-default" type="button" name="'+get_language_from_client()['agent_edit_actions']+'"><span class="glyphicon glyphicon-pencil"></span> '+get_language_from_client()['agent_edit_actions']+'</button>'
+            agent_list_html += '<button id="change_name" data-toggle="modal" data-current_name="'+agent_name+'" data-agent-id="'+agent+'" data-target="#agent_edit_name" class="btn btn-default" type="button" name="'+get_language_from_client()['agent_edit_name']+'"><span class="glyphicon glyphicon-erase"></span> '+get_language_from_client()['agent_edit_name']+'</button>'
             agent_list_html += '</div>'
-        agent_list_html += '</div>'
     return agent_list_html
 
 #### Template Tests
