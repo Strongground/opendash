@@ -97,4 +97,11 @@ body {
   100% {
     transform: rotate(360deg); } }
 
+/* line 120, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+.debug {
+  background: yellow;
+  border: 3px solid red;
+  padding: 5px;
+  margin: 10px 0; }
+
 /*# sourceMappingURL=../css/opendash.map */

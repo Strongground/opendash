@@ -1,3 +1,5 @@
+% setdefault('currentpage', '')
+
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
 
@@ -13,7 +15,16 @@
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="./dashboard">Dashboard</a></li>
+        <li
+        % if currentpage == 'dashboard':
+        class="active"
+        % end
+        ><a href="./dashboard">Dashboard</a></li>
+        <li
+        % if currentpage == 'actions':
+        class="active"
+        % end
+        ><a href="./actions_overview">Action Manager</a></li>
         <li><a href="./preferences">Preferences</a></li>
         <li><a href="./support">Support</a></li>
       </ul>

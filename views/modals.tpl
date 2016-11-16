@@ -13,6 +13,14 @@
       </div>
       <div class="modal-body">
         <table id="action_table" class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>{{current_language['modal_edit_actions_table_head_number']}}</th>
+              <th>{{current_language['modal_edit_actions_table_head_action']}}</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
           <!-- Dynamically loaded content goes here -->
           <tr>
             <td>

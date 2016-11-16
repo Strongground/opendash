@@ -20,4 +20,6 @@
     %   include('menubar.tpl')
     % end
 
+    % include('modals')
+
     <div class="container">

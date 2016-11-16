@@ -1,5 +1,4 @@
 % include('header', showMenu=showMenu)
-% include('modals')
 
 <div class="jumbotron">
   <h1>{{current_language['welcome_header']}}</h1>

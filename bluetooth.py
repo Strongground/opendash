@@ -6,7 +6,7 @@ It exposes several functions that can be used to find nearby devices, pair with 
 It also exposes several mock versions of the aforementioned functions that return simulated values relevant to the handling of bluetooth devices in OpenDash.
 """
 from __future__ import print_function
-from pprint import pprint
+#from pprint import pprint
 from time import sleep
 from random import randint
 import agent_shelf

@@ -9,11 +9,10 @@ import bluetooth
 
 # @TODO Implement workflow: "First search for bluetooth devices. Then choose which are DashAgents based on device name - automatically pair."
 # @TODO Add a additional naming layer in the UI so a DashAgent's MAC address can be bound to a -preferebly unique- name given by the user
-# @TODO Add some kind of no-SQL file based database to the project to store agents, configurations etc.
 # @TODO Write some high-level wrappers for Selenium to do things like "Find element with <ID> on page <X> and do <ACTION>" inside controlcenter.py
 # @TODO Add some kind of plugin system so you can add a "Amazon" plugin which defines some common URLs and then the user only has to add credentials and define which DashAgent should buy what product on Amazon
 # @TODO Add some kind of action management where an action can be bound to a DashAgent (effectively it's MAC address)
-# @TODO Encapsulate the whole Bluetooth logic into module.
+# @TODO If receive a POST from actions_overview, validate which form was posted (attribute "form_type") and if "create_action" call the appropiate method "actions_create_new(action_object)".
 
 #### Generic functions and helpers
 def check_login(username, password):
@@ -35,7 +34,7 @@ def check_login_cookie(username):
     return False
 
 def show_error_page(error_type):
-    """Show generic error page based on error type."""
+    """Return generic error page based on error type."""
     return template('error', error_type=error_type, current_language=get_language_from_client(), showMenu=True)
 
 def has_login_cookie():
@@ -102,7 +101,7 @@ def fonts_static(filename):
 #### Login
 @get('/login')
 def show_login():
-    """Show login form to the user."""
+    """Return login form to the user."""
     if has_login_cookie():
         redirect('/dashboard')
     else:
@@ -135,9 +134,9 @@ def do_logout():
 #### Dashboard
 @route('/dashboard')
 def show_dashboard():
-    """Show the default dashboard."""
+    """Return the default dashboard."""
     if has_login_cookie():
-        return template('dashboard', current_language=get_language_from_client(), showMenu=True)
+        return template('dashboard', current_language=get_language_from_client(), showMenu=True, currentpage='dashboard')
     else:
         redirect('/login')
 
@@ -145,12 +144,7 @@ def show_dashboard():
 def get_actions_from_agent(agent_id):
     """Return all actions associated with the agent, whose ID is given."""
     actions = bluetooth.shelf_manager.get_agents()[str(agent_id)]['actions']
-    action_list_html = '<thead><tr>'
-    action_list_html += '<th>' + get_language_from_client()['modal_edit_actions_table_head_number'] + '</th>'
-    action_list_html += '<th>' + get_language_from_client()['modal_edit_actions_table_head_action'] + '</th>'
-    action_list_html += '</thead></tr>'
-    action_list_html += '<tbody>'
-
+    action_list_html = ''
     number_of_actions = len(actions)
     if number_of_actions > 0:
         for action in actions:
@@ -158,14 +152,12 @@ def get_actions_from_agent(agent_id):
             action_list_html += '<td>' + str(action) + '</td>'
             action_list_html += '<td>' + bluetooth.shelf_manager.get_agents()[str(agent_id)]['actions'][action] + '</td>'
             action_list_html += '</tr>'
-
-    action_list_html += '</tbody>'
     return action_list_html
 
 @route('/dashboard/add_mock_action/<action_string>/to/<agent_id>')
 def add_action_to_agent(agent_id, action_string):
     """Add a single string to the action array of the agent, whose ID is given."""
-    bluetooth.shelf_manager.add_action(agent_id, action_string)
+    bluetooth.shelf_manager.agent_add_mock_action(agent_id, action_string)
     redirect('/dashboard')
 
 @route('/dashboard/change_name_of/<agent_id>/to/<name>')
@@ -174,7 +166,7 @@ def change_name_of_agent(agent_id, name):
     current_name = bluetooth.shelf_manager.get_agent(agent_id)['custom_name']
     new_name = str(name)
     if str(new_name) != current_name:
-        bluetooth.shelf_manager.change_name(agent_id, new_name)
+        bluetooth.shelf_manager.agent_change_name(agent_id, new_name)
     redirect('/dashboard')
 
 @route('/dashboard/get_mock_agents')
@@ -183,7 +175,6 @@ def get_mock_agents():
     list_of_agents = bluetooth.shelf_manager.get_agents()
     number_of_agents = len(list_of_agents)
     agent_list_html = ''
-
     if number_of_agents > 0:
         for agent in list_of_agents:
             agent_name = list_of_agents[agent]['custom_name']
@@ -195,10 +186,16 @@ def get_mock_agents():
             agent_list_html += '</div>'
     return agent_list_html
 
+#### 'Manage Actions' Panel
+@route('/actions_overview')
+def show_actions():
+    """Return the action overview template."""
+    return template('actions_overview', current_language=get_language_from_client(), showMenu=True, list_of_actions=bluetooth.shelf_manager.actions_show_all(), currentpage='actions')
+
 #### Template Tests
 @route('/testerror/<errortype>')
 def show_error(errortype):
-    """Show error page for given error type."""
+    """Return error page for given error type."""
     return show_error_page(errortype)
 
 #### Error pages

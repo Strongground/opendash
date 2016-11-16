@@ -1,4 +1,3 @@
-// Only load shit if other shit is ready to be found'n shit
 (function ($) {
   /*
   * @description Helper function to toggle an attribute of a dom element.
@@ -21,25 +20,27 @@
   }
 }($))
 
-// Generic Elements
+// // Generic Elements
 var agent_list = '.agent-container'
 var agent_container = agent_list + ' .agents'
 // var scan_button = 'button.scan-button'
 var agent_change_name_button = 'button#change_name'
 var agent_edit_actions_button = 'button#edit_actions'
-// Change Name Modal Constants
+// // Change Name Modal Constants
 var modal_change_name = '#agent_edit_name'
 var modal_change_name_form = '#change_name_form'
 var modal_change_name_input = 'input#new_name'
-// Edit Actions Modal Constants
+// // Edit Actions Modal Constants
 var modal_edit_actions = '#agent_edit_actions'
-var modal_edit_actions_table = 'table#action_table'
+var modal_edit_actions_table = 'table#action_table tbody'
 var modal_add_action_form = '#add_action_form'
 var modal_add_action_input = 'input#add_action'
-var modal_add_action_submit = '#submit_edit_action'
 
-// Load agents from DB at the beginning
+// // Manage Actions Page
+var actions_overview_table = '#actions_table'
+
 $(document).ready(function () {
+  // Load agents from DB at the beginning
   $(agent_container).load('/dashboard/get_mock_agents', function () {
     if ($(agent_container + ' .agent').length <= 0) {
       $(agent_list).find('.empty-message').removeClass('hidden')
