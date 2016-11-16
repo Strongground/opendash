@@ -1,9 +1,9 @@
 #!/usr/bin/python
 """
-This module provides high-level wrapper functions for the shelf containing all DashAgents.
+This module provides high-level wrapper functions for the shelves containing all data.
 
 It exposes several functions that can be used to return all entries of paired DashAgents and the data assigned to them, as well as
-adding and modifying actions assigned to DashAgents.
+adding and modifying these. It also contains functions to work with functions.
 """
 from __future__ import print_function
 from pprint import pprint
@@ -32,25 +32,13 @@ class AgentShelfManager(object):
             print('Error closing shelf: '+str(e))
             raise
 
-    # def store(self, key, value):
-    #     """Use to store a generic value into a given key into the agent shelve database.
-    #
-    #     This is unused atm due to store_agent() and currenty shelf only used to store agents.
-    #     """
-    #     try:
-    #         self.database[str(key)] = value
-    #         return True
-    #     except Exception as e:
-    #         print('Error writing data '+ str(value) +' to key '+ str(key) +' into shelf: '+str(e))
-    #         raise
-
     def store_agent(self, device):
         """Handle the data of a recently found DashAgent and add some additional data."""
         try:
-            index = str(len(self.database.keys())+1)
+            index = str(len(self.database['agents'])+1)
             device['custom_name'] = ('Dash Agent '+index)
             device['actions'] = {}
-            self.database[index] = device
+            self.database['agents'][index] = device
             return True
         except Exception as e:
             print('Error storing agent: '+str(e))
@@ -59,7 +47,7 @@ class AgentShelfManager(object):
     def get_agents(self):
         """Return all agents from shelf as dict."""
         try:
-            return dict(self.database)
+            return dict(self.database['agents'])
         except Exception as e:
             print('Error getting agents: '+str(e))
             raise
@@ -67,7 +55,7 @@ class AgentShelfManager(object):
     def get_agent(self, agent_id):
         """Get a specific agent from shelf and return as dict."""
         try:
-            return self.database[str(agent_id)]
+            return dict(self.database['agents'][str(agent_id)])
         except Exception as e:
             print('Error getting agent with id '+str(agent_id)+': '+str(e))
             raise
@@ -88,28 +76,43 @@ class AgentShelfManager(object):
             print('Error showing database entry: '+str(e))
             raise
 
-    def add_action(self, agent_id, action_id):
+    def agent_add_action(self, agent_id, action_id):
         """Add a action to a given agent based on UUID."""
         try:
-            index = str(len(self.database[str(agent_id)]['actions']))
-            self.database[str(agent_id)]['actions'][index] = action_id
+            index = str(len(self.database['agents'][str(agent_id)]['actions']))
+            self.database['agents'][str(agent_id)]['actions'][index] = action_id
             self.database.sync()
         except Exception as e:
             print('Error adding action '+str(action_id)+' to agent_shelf entry '+str(agent_id)+': '+str(e))
 
-    def add_mock_action(self, agent_id, action_string):
+    def agent_add_mock_action(self, agent_id, action_string):
         """Use for debugging purposes; Add a string to given agents actions array."""
         try:
-            index = str(len(self.database[str(agent_id)]['actions']))
-            self.database[str(agent_id)]['actions'][index] = str(action_string)
+            index = str(len(self.database.['agents'][str(agent_id)]['actions']))
+            self.database['agents'][str(agent_id)]['actions'][index] = str(action_string)
             self.database.sync()
         except Exception as e:
             print('Error adding action '+str(action_string)+' to agent_shelf entry '+str(agent_id)+': '+str(e))
 
-    def change_name(self, agent_id, name):
+    def agent_change_name(self, agent_id, name):
         """Change the name of a given agent based on UUID."""
         try:
-            self.database[str(agent_id)]['custom_name'] = str(name)
+            self.database['agents'][str(agent_id)]['custom_name'] = str(name)
             self.database.sync()
         except Exception as e:
             print('Error changing name of agent_shelf entry '+str(agent_id)+' to '+str(name)+': '+str(e))
+
+    def actions_show_all(self):
+        """Return all actions that are existing in the database."""
+        try:
+            return dict(self.database['actions'])
+        except Exception as e:
+            print('Error listing all actions: '+str(e))
+
+    def actions_create_new(self, action_object):
+        """Create a new action."""
+        try:
+            index = str(len(self.database[str(agent_id)]['actions']))
+            self.database['actions'][str(index+1)] = action_object
+        except Exception as e:
+            print('Error creating new action: '+str(e))
