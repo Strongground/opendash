@@ -192,6 +192,19 @@ def show_actions():
     """Return the action overview template."""
     return template('actions_overview', current_language=get_language_from_client(), showMenu=True, list_of_actions=bluetooth.shelf_manager.actions_show_all(), currentpage='actions')
 
+@post('/actions_overview')
+def handle_form():
+    """Handle the sent form."""
+    form_type = request.forms.get('form_type')
+    if form_type == 'create_action':
+        action = {
+            'custom_name':          request.forms.get('new_action_name'),
+            'plugin':               request.forms.get('plugin'),
+            'extended_parameters':  request.forms.get('extended-params')
+        }
+        bluetooth.shelf_manager.actions_create_new(action)
+        redirect('/actions_overview')
+
 #### Template Tests
 @route('/testerror/<errortype>')
 def show_error(errortype):
@@ -200,12 +213,12 @@ def show_error(errortype):
 
 #### Error pages
 @error(404)
-def error404(error):
+def error404(httperror):
     """Return 404 error page."""
     return show_error('404')
 
 @error(500)
-def error500(error):
+def error500(httperror):
     """Return 500 error page."""
     return show_error('500')
 

@@ -107,6 +107,18 @@ body {
   }
 }
 
+// Action Manager
+#actions_table {
+  #edit_action {
+    opacity: 0;
+  }
+  tr:hover {
+    #edit_action {
+      opacity: 1;
+    }
+  }
+}
+
 // Animations
 @keyframes full_rotation {
   0% {

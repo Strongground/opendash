@@ -88,7 +88,7 @@ class AgentShelfManager(object):
     def agent_add_mock_action(self, agent_id, action_string):
         """Use for debugging purposes; Add a string to given agents actions array."""
         try:
-            index = str(len(self.database.['agents'][str(agent_id)]['actions']))
+            index = str(len(self.database['agents'][str(agent_id)]['actions']))
             self.database['agents'][str(agent_id)]['actions'][index] = str(action_string)
             self.database.sync()
         except Exception as e:
@@ -112,7 +112,7 @@ class AgentShelfManager(object):
     def actions_create_new(self, action_object):
         """Create a new action."""
         try:
-            index = str(len(self.database[str(agent_id)]['actions']))
-            self.database['actions'][str(index+1)] = action_object
+            index = str(len(self.database['actions']) + 1)
+            self.database['actions'][index] = action_object
         except Exception as e:
             print('Error creating new action: '+str(e))

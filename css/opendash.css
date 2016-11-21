@@ -91,13 +91,21 @@ body {
   color: #aeaeae;
   text-align: center; }
 
+/* line 112, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+#actions_table #edit_action {
+  opacity: 0; }
+
+/* line 116, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+#actions_table tr:hover #edit_action {
+  opacity: 1; }
+
 @keyframes full_rotation {
   0% {
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
 
-/* line 120, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
+/* line 132, /Users/noel/Library/Mobile Documents/com~apple~CloudDocs/Projekte/opendash/sass/opendash.scss */
 .debug {
   background: yellow;
   border: 3px solid red;
