@@ -1,5 +1,5 @@
 % #showMenu = showMenu
-% include('header', showMenu=showMenu)
+% include('header', showMenu=showMenu, title=current_language['login_title'])
 
 % setdefault('invalidateField', '')
 % setdefault('originalInput', '')

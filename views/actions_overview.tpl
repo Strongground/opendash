@@ -1,4 +1,8 @@
 % include('header', showMenu=showMenu)
+% setdefault('open_modal', '')
+% if open_modal == 'edit_action':
+<script>$(document).ready(function () { $('#actions_edit_action').modal('show') })</script>
+% end
 
 <h1>Manage and create actions</h1>
 
@@ -22,7 +26,7 @@
       <tbody>
         % i = 0
         % for action in list_of_actions:
-        % i += 1
+        %   i += 1
         <tr>
           <td>{{i}}</li>
           <td>{{list_of_actions[action]['custom_name']}}</td>
@@ -30,9 +34,13 @@
           <td>{{list_of_actions[action]['plugin']}}</td>
           <td>{{action}}</td>
           <td>
-            <button id="edit_action" data-toggle="modal" data-target="#actions_edit_action" data-action-uid="{{action}}" class="btn btn-default" type="button" name="edit_action">
-              <span class="glyphicon glyphicon-pencil"></span>
-            </button>
+            <form index="edit_action_form" method="post">
+              <input type="hidden" name="form_type" value="open_modal">
+              <input type="hidden" name="action_uid" value="{{action}}">
+              <button type="submit" id="edit_action" data-toggle="modal" data-target="#actions_edit_action" data-action-uid="{{action}}" class="btn btn-default" name="edit_action">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </button>
+            </form>
           </td>
         </tr>
         % end

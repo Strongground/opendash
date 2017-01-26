@@ -85,15 +85,17 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">{{current_language['modal_actions_edit_action']}}</h4>
       </div>
-      <form id="actions_edit_action_form" data-agent-id="">
+      <form id="actions_edit_action_form" method="post">
         <div class="modal-body">
             <div class="form-group">
-              <!-- <label for="new_name">{{current_language['modal_change_name_description']}}</label>
-              <input type="text" class="form-control" id="new_name">
-              <p class="help-block">{{current_language['modal_change_name_helptext']}}</p> -->
+
+              ITERATE OVER ALL ATTRIBUTES OF ACTION
+              Extend action attributes by type, make them dicts themselves...?
+
             </div>
         </div>
         <div class="modal-footer">
+          <input type="hidden" name="form_type" value="edit_action">
           <button type="button" class="btn btn-default" data-dismiss="modal">{{current_language['modal_close']}}</button>
           <button type="submit" id="submit_name_change" class="btn btn-primary">{{current_language['modal_save_changes']}}</button>
         </div>

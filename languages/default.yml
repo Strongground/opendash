@@ -1,5 +1,6 @@
 language_name: "English"
 # login
+login_title: "Login"
 heading_login: "Please log in"
 label_username: "Username"
 label_password: "Password"
