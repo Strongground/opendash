@@ -22,8 +22,7 @@ class AgentShelfManager(object):
             print('Error opening shelf: '+str(e))
             raise
 
-    @classmethod
-    def close_db(cls):
+    def close_db(self):
         """Close the currently open shelve database."""
         try:
             cls.database.close()
@@ -84,6 +83,7 @@ class AgentShelfManager(object):
             self.database.sync()
         except Exception as e:
             print('Error adding action '+str(action_id)+' to agent_shelf entry '+str(agent_id)+': '+str(e))
+            raise
 
     def agent_add_mock_action(self, agent_id, action_string):
         """Use for debugging purposes; Add a string to given agents actions array."""
@@ -93,6 +93,7 @@ class AgentShelfManager(object):
             self.database.sync()
         except Exception as e:
             print('Error adding action '+str(action_string)+' to agent_shelf entry '+str(agent_id)+': '+str(e))
+            raise
 
     def agent_change_name(self, agent_id, name):
         """Change the name of a given agent based on UUID."""
@@ -101,6 +102,7 @@ class AgentShelfManager(object):
             self.database.sync()
         except Exception as e:
             print('Error changing name of agent_shelf entry '+str(agent_id)+' to '+str(name)+': '+str(e))
+            raise
 
     def actions_show_all(self):
         """Return all actions that are existing in the database."""
@@ -108,6 +110,7 @@ class AgentShelfManager(object):
             return dict(self.database['actions'])
         except Exception as e:
             print('Error listing all actions: '+str(e))
+            raise
 
     def actions_create_new(self, action_object):
         """Create a new action."""
@@ -116,3 +119,4 @@ class AgentShelfManager(object):
             self.database['actions'][index] = action_object
         except Exception as e:
             print('Error creating new action: '+str(e))
+            raise
