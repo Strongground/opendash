@@ -4,14 +4,10 @@ from __future__ import print_function
 # from pprint import pprint
 import yaml
 # from bluepy.btle import Scanner, DefaultDelegate
-from bottle import route, template, get, post, request, response, static_file, error, redirect
+from bottle import Bottle, template, request, response, static_file, redirect, debug
 import bluetooth
 import agent_shelf
 
-# @TODO Convert this into a class
-# This class should call to BluetoothManager. - Done
-# It should also call to AgentShelfManager. The instance of BluetoothManager class can be given a reference to the AgentShelfManager class instance. - Done
-# @TODO All calls to bluetooth module should be converted to use instance of BluetoothManager class now
 # @TODO Implement workflow: "First search for bluetooth devices. Then choose which are DashAgents based on device name - automatically pair."
 # @TODO Add a additional naming layer in the UI so a DashAgent's MAC address can be bound to a -preferebly unique- name given by the user
 # @TODO Write some high-level wrappers for Selenium to do things like "Find element with <ID> on page <X> and do <ACTION>" inside controlcenter.py
@@ -22,16 +18,43 @@ import agent_shelf
 class ControlCenter(object):
     """This is the main class of DashControl. It handles DashAgent calls and serves the GUI to administrate them and the actions bound to them."""
 
-    def __init__(self, verbose, force_shelf_creation, scan_mode, debug_mode):
+    def __init__(self, verbose, force_shelf_creation, scan_mode):
         """Inititalize control center."""
+        self._app = Bottle()
         self.verbose = verbose
         self.force_shelf_creation = force_shelf_creation
         self.scan_mode = scan_mode
-        self.debug_mode = debug_mode
+        # self.debug_mode = debug_mode
         self.shelf_manager = agent_shelf.AgentShelfManager('agent_shelf')
         self.bluetooth_manager = bluetooth.BluetoothManager(shelf_manager=self.shelf_manager)
+        self._route()
 
-    #### classmethods
+    ### route method
+    def _route(self):
+        # framework
+        self._app.route('/js/<filename>', method="GET", callback=self.js_static)
+        self._app.route('/js/bootstrap/<filename>', method="GET", callback=self.js_static_bootstrap)
+        self._app.route('/img/<filename>', method="GET", callback=self.img_static)
+        self._app.route('/css/<filename>', method="GET", callback=self.css_static)
+        self._app.route('/fonts/bootstrap/<filename>', method="GET", callback=self.fonts_static_bootstrap)
+        self._app.route('/fonts/<filename>', method="GET", callback=self.fonts_static)
+        # content
+        self._app.route('/', method="GET", callback=self.index)
+        self._app.route('/login', method="GET", callback=self.show_login)
+        self._app.route('/login', method="POST", callback=self.do_login)
+        self._app.route('/logout', method="GET", callback=self.do_logout)
+        self._app.route('/dashboard', method="GET", callback=self.show_dashboard)
+        self._app.route('/dashboard/get_actions_from/<agent_id>', method="GET", callback=self.get_actions_from_agent)
+        self._app.route('/dashboard/add_mock_action/<action_string>/to/<agent_id>', method="GET", callback=self.add_action_to_agent)
+        self._app.route('/dashboard/change_name_of/<agent_id>/to/<name>', method="GET", callback=self.change_name_of_agent)
+        self._app.route('/dashboard/get_mock_agents', method="GET", callback=self.get_mock_agents)
+        self._app.route('/actions_overview', method="GET", callback=self.show_actions)
+        self._app.route('/actions_overview', method="POST", callback=self.handle_form)
+        self._app.route('/testerror/<errortype>', method="POST", callback=self.show_error)
+        self._app.error(code=500)(self.error500)
+        self._app.error(code=404)(self.error404)
+
+    #### Helper methods
     def check_login(self, username, password):
         """Check if given login is correct."""
         result = dict()
@@ -70,53 +93,58 @@ class ControlCenter(object):
 
     def load_language_file(self, lang):
         """Load localized strings."""
-        if lang == "" or lang == "default":
-            file_handle = open("languages/default.yml")
+        if lang == '' or lang == 'default':
+            file_handle = open('languages/default.yml')
         else:
-            language_filename = "languages/"+lang+".yml"
+            language_filename = 'languages/'+lang+'.yml'
             file_handle = open(language_filename)
         language_file = yaml.safe_load(file_handle)
         file_handle.close()
         return language_file
 
-    #### Routes
-    @route('/')
+    def start(self, debug_mode):
+        """Default start for server."""
+        print('Run start()')
+        if debug_mode:
+            print('In Debug mode')
+            #### Start development server
+            debug(True)
+            self._app.run(host='localhost', port=8585)
+        else:
+            print('In Production mode')
+            #### Start test production server
+            self._app.run(host='0.0.0.0', port=80)
+
+    #### Route Methods
     def index(self):
         """Redirect non-specific."""
         redirect('/login')
 
-    @route('/js/<filename>')
     def js_static(self, filename):
         """Serve static JS."""
         return static_file(filename, root='./js')
 
-    @route('/js/bootstrap/<filename>')
     def js_static_bootstrap(self, filename):
         """Serve static bootstrap JS modules."""
         return static_file(filename, root='./js/bootstrap')
 
-    @route('/img/<filename>')
     def img_static(self, filename):
         """Serve static image files."""
         return static_file(filename, root='./img')
 
-    @route('/css/<filename>')
     def css_static(self, filename):
         """Serve static css files."""
         return static_file(filename, root='./css')
 
-    @route('/fonts/bootstrap/<filename>')
     def fonts_static_bootstrap(self, filename):
         """Serve icon webfonts from bootstrap."""
         return static_file(filename, root='./fonts/bootstrap')
 
-    @route('/fonts/<filename>')
     def fonts_static(self, filename):
         """Serve webfonts."""
         return static_file(filename, root='./fonts')
 
     #### Login
-    @get('/login')
     def show_login(self):
         """Return login form to the user."""
         if self.has_login_cookie():
@@ -124,7 +152,6 @@ class ControlCenter(object):
         else:
             return template('login', current_language=self.get_language_from_client(), showMenu=False)
 
-    @post('/login')
     def do_login(self):
         """Process the login attempt of a user."""
         username = request.forms.get('username')
@@ -142,14 +169,12 @@ class ControlCenter(object):
             # Error
             return template('login', current_language=self.get_language_from_client(), showMenu=False, invalidateField=login_check_result['error_cause'])
 
-    @route('/logout')
     def do_logout(self):
         """Redirect user to the login page, delete login cookies."""
         response.set_cookie('opendash-stayloggedin', 'false')
         redirect('/login')
 
     #### Dashboard
-    @route('/dashboard')
     def show_dashboard(self):
         """Return the default dashboard."""
         if self.has_login_cookie():
@@ -157,7 +182,6 @@ class ControlCenter(object):
         else:
             redirect('/login')
 
-    @route('/dashboard/get_actions_from/<agent_id>')
     def get_actions_from_agent(self, agent_id):
         """Return all actions associated with the agent, whose ID is given."""
         actions = self.shelf_manager.get_agents()[str(agent_id)]['actions']
@@ -171,13 +195,11 @@ class ControlCenter(object):
                 action_list_html += '</tr>'
         return action_list_html
 
-    @route('/dashboard/add_mock_action/<action_string>/to/<agent_id>')
     def add_action_to_agent(self, agent_id, action_string):
         """Add a single string to the action array of the agent, whose ID is given."""
         self.shelf_manager.agent_add_mock_action(agent_id, action_string)
         redirect('/dashboard')
 
-    @route('/dashboard/change_name_of/<agent_id>/to/<name>')
     def change_name_of_agent(self, agent_id, name):
         """Change the name of one the agent, whose ID is given."""
         current_name = self.shelf_manager.get_agent(agent_id)['custom_name']
@@ -186,7 +208,6 @@ class ControlCenter(object):
             self.shelf_manager.agent_change_name(agent_id, new_name)
         redirect('/dashboard')
 
-    @route('/dashboard/get_mock_agents')
     def get_mock_agents(self):
         """Return all paired agents from shelve and return HTML containing them."""
         list_of_agents = self.shelf_manager.get_agents()
@@ -204,12 +225,10 @@ class ControlCenter(object):
         return agent_list_html
 
     #### 'Manage Actions' Panel
-    @route('/actions_overview')
     def show_actions(self):
         """Return the action overview template."""
         return template('actions_overview', current_language=self.get_language_from_client(), showMenu=True, list_of_actions=self.shelf_manager.actions_show_all(), currentpage='actions')
 
-    @post('/actions_overview')
     def handle_form(self):
         """Handle the sent form."""
         form_type = request.forms.get('form_type')
@@ -227,19 +246,15 @@ class ControlCenter(object):
         elif form_type == 'open_modal':
             return template('actions_overview', current_language=self.get_language_from_client(), showMenu=True, list_of_actions=self.shelf_manager.actions_show_all(), currentpage='actions', open_modal='edit_action', action_uid=action_uid)
 
-    #### Template Tests
-    @route('/testerror/<errortype>')
+    #### Error pages
     def show_error(self, errortype):
         """Return error page for given error type."""
         return self.show_error_page(errortype)
 
-    #### Error pages
-    @error(404)
     def error404(self, httperror):
         """Return 404 error page."""
         return self.show_error('404')
 
-    @error(500)
     def error500(self, httperror):
         """Return 500 error page."""
         return self.show_error('500')
