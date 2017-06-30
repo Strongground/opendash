@@ -72,7 +72,7 @@ $(agent_list).on('click', agent_edit_actions_button, function () {
   $(modal_edit_actions_table).load(target_url)
 })
 
-// Send add-action if form is submitted is pressed and action_string is given
+// Send add-action if form is submitted and action_string is given
 $(modal_edit_actions).on('submit', modal_add_action_form, function (event) {
   event.preventDefault()
   var agent_id = $(this).attr('data-agent-id').toString()

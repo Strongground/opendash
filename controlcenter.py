@@ -50,9 +50,10 @@ class ControlCenter(object):
         self._app.route('/dashboard/get_mock_agents', method="GET", callback=self.get_mock_agents)
         self._app.route('/actions_overview', method="GET", callback=self.show_actions)
         self._app.route('/actions_overview', method="POST", callback=self.handle_form)
-        self._app.route('/testerror/<errortype>', method="POST", callback=self.show_error)
+        self._app.route('/testerror/<errortype>', method="POST", callback=self.show_error_page)
         self._app.error(code=500)(self.error500)
         self._app.error(code=404)(self.error404)
+        self._app.error(code=403)(self.error403)
 
     #### Helper methods
     def check_login(self, username, password):
@@ -72,10 +73,6 @@ class ControlCenter(object):
     def check_login_cookie(self, username):
         """Check if client has valid login-cookie."""
         return False
-
-    def show_error_page(self, error_type):
-        """Return generic error page based on error type."""
-        return template('error', error_type=error_type, current_language=self.get_language_from_client(), showMenu=True)
 
     def has_login_cookie(self):
         """Check if the user is logged in and redirects to original target."""
@@ -102,18 +99,13 @@ class ControlCenter(object):
         file_handle.close()
         return language_file
 
-    def start(self, debug_mode):
+    def start(self, debug_mode, host, port):
         """Default start for server."""
-        print('Run start()')
         if debug_mode:
-            print('In Debug mode')
-            #### Start development server
             debug(True)
-            self._app.run(host='localhost', port=8585)
-        else:
-            print('In Production mode')
-            #### Start test production server
-            self._app.run(host='0.0.0.0', port=80)
+            if self.verbose:
+                print('Debug mode')
+        self._app.run(host=host, port=port)
 
     #### Route Methods
     def index(self):
@@ -247,14 +239,14 @@ class ControlCenter(object):
             return template('actions_overview', current_language=self.get_language_from_client(), showMenu=True, list_of_actions=self.shelf_manager.actions_show_all(), currentpage='actions', open_modal='edit_action', action_uid=action_uid)
 
     #### Error pages
-    def show_error(self, errortype):
-        """Return error page for given error type."""
-        return self.show_error_page(errortype)
+    def show_error_page(self, error_type):
+        """Return generic error page based on error type."""
+        return template('error', error_type=error_type, current_language=self.get_language_from_client(), showMenu=True)
 
     def error404(self, httperror):
         """Return 404 error page."""
-        return self.show_error('404')
+        return self.show_error_page('404')
 
     def error500(self, httperror):
         """Return 500 error page."""
-        return self.show_error('500')
+        return self.show_error_page('500')

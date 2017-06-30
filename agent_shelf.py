@@ -2,8 +2,8 @@
 """
 This module provides high-level wrapper functions for the shelves containing all data.
 
-It exposes several functions that can be used to return all entries of paired DashAgents and the data assigned to them, as well as
-adding and modifying these. It also contains functions to work with functions.
+It exposes several functions that can be used to return all entries of paired DashAgents and the data
+assigned to them, as well as adding and modifying these.
 """
 from __future__ import print_function
 from pprint import pprint
@@ -11,8 +11,6 @@ import shelve
 
 class AgentShelfManager(object):
     """This class wraps all the required functions to communicate with the local shelve database storing DashAgents."""
-
-    database = None
 
     def __init__(self, database_name):
         """Open a shelve database on init of this class."""
